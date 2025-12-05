@@ -3,10 +3,6 @@
 const GRID_W = 64, GRID_H = 64;
 const STATE_CH = 2;       // [V, H]
 const F = 8; // conv features  
-let fixed_n_steps = true // T_STEPS applies, otherwise a random number between MIN_ and MAX_ T_STEPS
-const T_STEPS = 10 // fixed num training rollouts
-const MIN_T_STEPS = 5; // lower bound on num of rollout steps
-const MAX_T_STEPS = 15; // higher bound
 const H_DECAY = 0.99;     // hidden decay each step
 let k1, b1, k2, b2;
 

@@ -74,7 +74,7 @@ async function keyPressed() {
     inferOnceFullRollout();
     displayDirty = true;
   }
-  if (key.toLowerCase() === 'a') {
+  if (key.toLowerCase() === ' ') {
     animating = !animating
     if (animating) {
       console.log("Animation start");
@@ -107,6 +107,10 @@ async function keyPressed() {
       const val = edgeMeanFromVisible(renderState);
       val.data().then(v => console.log("edge density =", v[0]));
     });
+  }
+
+  if (key.toLowerCase() === 'v') {
+    fixed_n_steps = !fixed_n_steps;
   }
 }
 

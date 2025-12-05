@@ -1,5 +1,9 @@
 // train.js
 
+let fixed_n_steps = true // T_STEPS applies, otherwise a random number between MIN_ and MAX_ T_STEPS
+const T_STEPS = 10 // fixed num training rollouts
+const MIN_T_STEPS = 5; // lower bound on num of rollout steps
+const MAX_T_STEPS = 15; // higher bound
 const optimizer = tf.train.adam(1e-3);
 let trainCounter = 0;
 
