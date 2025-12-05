@@ -1,64 +1,63 @@
-// ui.js
-function createUI({
-  onToggleTraining,
-  onGrowOnce,
-  onToggleAnimation,
-  onResetParams,
-  onResetState,
-  onToggleFixedSteps,
-  onCheckEdge,
-  onRandomRolloutLengthChange
-}) {
+function createUI() {
   const panel = document.createElement("div");
-  panel.style.position = "absolute";
-  panel.style.top = "10px";
-  panel.style.left = "10px";
-  panel.style.padding = "10px";
-  panel.style.background = "#111";
-  panel.style.color = "#0f0";
-  panel.style.fontFamily = "monospace";
-  panel.style.fontSize = "14px";
-  panel.style.border = "1px solid #0f0";
-  panel.style.width = "200px";
-  panel.style.userSelect = "none";
+  panel.id = "ui-panel";
   document.body.appendChild(panel);
 
-  function addButton(label, handler) {
-    const btn = document.createElement("button");
-    btn.textContent = label;
-    btn.style.display = "block";
-    btn.style.width = "100%";
-    btn.style.margin = "4px 0";
-    btn.style.background = "#000";
-    btn.style.color = "#0f0";
-    btn.style.border = "1px solid #0f0";
-    btn.style.padding = "4px";
-    btn.style.fontFamily = "monospace";
-    btn.onclick = handler;
-    panel.appendChild(btn);
-  }
+  const title = document.createElement("h3");
+  title.textContent = "Controls";
+  panel.appendChild(title);
 
-  // --- Buttons mapped to your key presses ---
-  addButton("Toggle Training (t)", onToggleTraining);
-  addButton("Grow Once (g)", onGrowOnce);
-  addButton("Toggle Animation (space)", onToggleAnimation);
-  addButton("Reset Net Params (p)", onResetParams);
-  addButton("Reset CA State (r)", onResetState);
-  addButton("Toggle Fixed Steps (f)", onToggleFixedSteps);
-  addButton("Check Edge Density (e)", onCheckEdge);
+  // --- BUTTONS ---
+  addButton(panel, "Toggle Training (t)", () => triggerKey("t"));
+  addButton(panel, "Grow Once (g)", () => triggerKey("g"));
+  addButton(panel, "Animate (space)", () => triggerKey(" "));
+  addButton(panel, "Reset Params (p)", () => triggerKey("p"));
+  addButton(panel, "Reset Visuals (r)", () => triggerKey("r"));
+  addButton(panel, "Fixed Steps (f)", () => triggerKey("f"));
 
-  // --- Slider for rollout length ---
-  const sliderLabel = document.createElement("div");
-  sliderLabel.innerText = "Rollout Length";
-  sliderLabel.style.marginTop = "8px";
-  panel.appendChild(sliderLabel);
+  // --- EDGE TARGET SLIDER ---
+  addSlider(panel, {
+    label: "Edge Density",
+    min: 0.0,
+    max: 1.0,
+    step: 0.01,
+    value: EDGE_TARGET,
+    onChange: (v) => {
+      EDGE_TARGET = parseFloat(v);
+    }
+  });
+}
+
+/* ===== Helpers ===== */
+function addButton(panel, label, onClick) {
+  const btn = document.createElement("button");
+  btn.textContent = label;
+  btn.onclick = onClick;
+  panel.appendChild(btn);
+}
+
+function addSlider(panel, { label, min, max, step, value, onChange }) {
+  const block = document.createElement("div");
+  block.className = "ui-slider-block";
+
+  const lbl = document.createElement("label");
+  lbl.textContent = label;
 
   const slider = document.createElement("input");
   slider.type = "range";
-  slider.min = 1;
-  slider.max = 200;
-  slider.value = 30;
-  slider.style.width = "100%";
-  slider.oninput = () => onRandomRolloutLengthChange(slider.value);
-  panel.appendChild(slider);
+  slider.min = min;
+  slider.max = max;
+  slider.step = step;
+  slider.value = value;
+  slider.oninput = (e) => onChange(e.target.value);
+
+  block.appendChild(lbl);
+  block.appendChild(slider);
+  panel.appendChild(block);
+}
+
+/* simulates key events so UI mirrors keyboard behavior  */
+function triggerKey(k) {
+  window.key = k;
+  if (window.keyPressed) window.keyPressed();
 }

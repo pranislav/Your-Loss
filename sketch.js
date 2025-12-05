@@ -7,6 +7,14 @@ let plotCanvas;
 let lossHistory = [];
 const MAX_HISTORY = 100;
 
+// ---- Expose controls for UI buttons ----
+window.toggleTraining = () => keyPressed({ key: 't' });
+window.growOnce      = () => keyPressed({ key: 'g' });
+window.toggleAnimation = () => keyPressed({ key: ' ' });
+window.resetParams   = () => keyPressed({ key: 'p' });
+window.resetVisuals  = () => keyPressed({ key: 'r' });
+window.toggleFixedSteps = () => keyPressed({ key: 'f' });
+
 function setup() {
   const MAIN_W = 64*displayScale
   const MAIN_H = 64*displayScale
@@ -14,19 +22,7 @@ function setup() {
   const PLOT_H = 100;
   createCanvas(max(MAIN_W, PLOT_W), MAIN_H + PLOT_H + 20);
 
-  createUI({
-    onToggleTraining: () => keyPressed({ key: 't' }),
-    onGrowOnce: () => keyPressed({ key: 'g' }),
-    onToggleAnimation: () => keyPressed({ key: ' ' }),
-    onResetParams: () => keyPressed({ key: 'p' }),
-    onResetState: () => keyPressed({ key: 'r' }),
-    onToggleFixedSteps: () => keyPressed({ key: 'f' }),
-    onCheckEdge: () => keyPressed({ key: 'e' }),
-    onRandomRolloutLengthChange: val => {
-        rollout_length = parseInt(val);
-        console.log("Rollout length =", rollout_length);
-    }
-  });
+  createUI();
 
   plotCanvas = createGraphics(PLOT_W, PLOT_H); 
 

@@ -2,7 +2,7 @@
 // losses.js
 // All loss functions + feature extractors live here.
 
-const EDGE_TARGET = 0.40;
+window.EDGE_TARGET = 0.40;
 
 // -------------------------------------------
 // Utilities
