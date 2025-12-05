@@ -5,3 +5,33 @@ html, body {
 canvas {
   display: block;
 }
+
+/* --- GLOBAL SLIDER STYLE --- */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #0a0; /* green track */
+  border-radius: 0; /* square track */
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #0f0; /* brighter green */
+  border: 1px solid #070;
+  cursor: pointer;
+  border-radius: 0; /* square thumb */
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #0f0;
+  border: 1px solid #070;
+  cursor: pointer;
+  border-radius: 0;
+}
