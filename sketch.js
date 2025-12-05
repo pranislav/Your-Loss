@@ -13,6 +13,21 @@ function setup() {
   const PLOT_W = MAIN_W;
   const PLOT_H = 100;
   createCanvas(max(MAIN_W, PLOT_W), MAIN_H + PLOT_H + 20);
+
+  createUI({
+    onToggleTraining: () => keyPressed({ key: 't' }),
+    onGrowOnce: () => keyPressed({ key: 'g' }),
+    onToggleAnimation: () => keyPressed({ key: ' ' }),
+    onResetParams: () => keyPressed({ key: 'p' }),
+    onResetState: () => keyPressed({ key: 'r' }),
+    onToggleFixedSteps: () => keyPressed({ key: 'f' }),
+    onCheckEdge: () => keyPressed({ key: 'e' }),
+    onRandomRolloutLengthChange: val => {
+        rollout_length = parseInt(val);
+        console.log("Rollout length =", rollout_length);
+    }
+  });
+
   plotCanvas = createGraphics(PLOT_W, PLOT_H); 
 
   // offscreen canvas for tf.toPixels()
@@ -58,8 +73,10 @@ function draw() {
 }
 
 
-async function keyPressed() {
-  if (key === 't') {
+async function keyPressed(evt) {
+    const k = (evt?.key ?? key).toLowerCase();
+
+  if (k === 't') {
     training = !training;
     if (training) {
       loopTrain()
@@ -69,12 +86,12 @@ async function keyPressed() {
       console.log("training stop")
     }
   }
-  if (key.toLowerCase() === 'g') {
+  if (k === 'g') {
     console.log('grow');
     inferOnceFullRollout();
     displayDirty = true;
   }
-  if (key.toLowerCase() === ' ') {
+  if (k === ' ') {
     animating = !animating
     if (animating) {
       console.log("Animation start");
@@ -85,23 +102,23 @@ async function keyPressed() {
     }
   }
   
-  if (key.toLowerCase() === 'p') {
+  if (k === 'p') {
     console.log("p pressed")
     resetParams();
   }
 
-  if (key.toLowerCase() === 'r') {
+  if (k === 'r') {
     console.log('reset visuals');
     resetRenderState();
     displayDirty = true;
   }
   
-  if (key.toLowerCase() == 'f') {
+  if (k == 'f') {
     fixed_n_steps = !fixed_n_steps
     console.log('fixed number of steps: ', fixed_n_steps)
   }
   
-  if (key.toLowerCase() === 'e') {
+  if (k === 'e') {
     console.log("Edge density check:");
     tf.tidy(() => {
       const val = edgeMeanFromVisible(renderState);
@@ -109,7 +126,7 @@ async function keyPressed() {
     });
   }
 
-  if (key.toLowerCase() === 'v') {
+  if (k === 'v') {
     fixed_n_steps = !fixed_n_steps;
   }
 }
