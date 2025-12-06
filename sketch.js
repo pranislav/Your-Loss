@@ -7,14 +7,6 @@ let plotCanvas;
 let lossHistory = [];
 const MAX_HISTORY = 100;
 
-// ---- Expose controls for UI buttons ----
-window.toggleTraining = () => keyPressed({ key: 't' });
-window.growOnce      = () => keyPressed({ key: 'g' });
-window.toggleAnimation = () => keyPressed({ key: ' ' });
-window.resetParams   = () => keyPressed({ key: 'p' });
-window.resetVisuals  = () => keyPressed({ key: 'r' });
-window.toggleFixedSteps = () => keyPressed({ key: 'f' });
-
 function setup() {
   const MAIN_W = 64*displayScale
   const MAIN_H = 64*displayScale

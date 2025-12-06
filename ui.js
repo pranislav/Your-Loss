@@ -7,32 +7,41 @@ function createUI() {
   title.textContent = "Controls";
   panel.appendChild(title);
 
-  // --- BUTTONS ---
-  addButton(panel, "Toggle Training (t)", () => triggerKey("t"));
+  // ORDER YOU REQUESTED:
+  addButton(panel, "Toggle Growth (space)", () => triggerKey(" "));
   addButton(panel, "Grow Once (g)", () => triggerKey("g"));
-  addButton(panel, "Animate (space)", () => triggerKey(" "));
+  addButton(panel, "Reset Cells (r)", () => triggerKey("r"));
+  addButton(panel, "Toggle Training (t)", () => triggerKey("t"));
   addButton(panel, "Reset Params (p)", () => triggerKey("p"));
-  addButton(panel, "Reset Visuals (r)", () => triggerKey("r"));
   addButton(panel, "Fixed Steps (f)", () => triggerKey("f"));
 
-  // --- EDGE TARGET SLIDER ---
   addSlider(panel, {
     label: "Edge Density",
     min: 0.0,
     max: 1.0,
     step: 0.01,
     value: EDGE_TARGET,
-    onChange: (v) => {
-      EDGE_TARGET = parseFloat(v);
-    }
+    onChange: (v) => EDGE_TARGET = parseFloat(v)
   });
 }
 
-/* ===== Helpers ===== */
+
+/* -------- Helpers -------- */
+
 function addButton(panel, label, onClick) {
   const btn = document.createElement("button");
   btn.textContent = label;
-  btn.onclick = onClick;
+
+  // prevent space/enter triggering the button
+  btn.onkeydown = (e) => {
+    if (e.key === " " || e.key === "Enter") e.preventDefault();
+  };
+
+  btn.onclick = (e) => {
+    e.target.blur();  // remove focus to avoid space activating it
+    onClick();
+  };
+
   panel.appendChild(btn);
 }
 
@@ -56,8 +65,10 @@ function addSlider(panel, { label, min, max, step, value, onChange }) {
   panel.appendChild(block);
 }
 
-/* simulates key events so UI mirrors keyboard behavior  */
+/* Call p5 keyPressed correctly */
 function triggerKey(k) {
-  window.key = k;
-  if (window.keyPressed) window.keyPressed();
+  key = k;                 // update p5’s global key
+  if (typeof keyPressed === "function") {
+    keyPressed();
+  }
 }
