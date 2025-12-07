@@ -1,37 +1,116 @@
-html, body {
-  margin: 0;
-  padding: 0;
-}
-canvas {
-  display: block;
+/* === GLOBAL TERMINAL LOOK === */
+body {
+  background: #000;
+  color: #0f0;
+  font-family: "IBM Plex Mono", "Courier New", monospace;
 }
 
-/* --- GLOBAL SLIDER STYLE --- */
-input[type="range"] {
+/* optional CRT scanline effect */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 255, 0, 0.05) 0px,
+    rgba(0, 255, 0, 0.05) 1px,
+    rgba(0, 0, 0, 0.05) 2px
+  );
+  z-index: 99999;
+  opacity: 0.25;
+}
+
+/* === UI PANEL === */
+#ui-panel {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 240px;
+
+  background: #000;
+  border: 1px solid #0f0;
+  padding: 12px;
+  z-index: 20;
+
+  box-shadow: 0 0 10px #0f04;
+}
+
+/* Title inside panel */
+#ui-panel h3 {
+  margin-top: 0;
+  color: #0f0;
+  font-size: 16px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #0f0;
+  padding-bottom: 6px;
+}
+
+/* === BUTTONS === */
+#ui-panel button {
+  width: 100%;
+  background: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
+  font-family: inherit;
+  padding: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+#ui-panel button:hover {
+  background: #030;
+}
+
+/* === SLIDER blocks === */
+.ui-slider-block {
+  margin-bottom: 12px;
+}
+
+.ui-slider-block label {
+  display: block;
+  margin-bottom: 6px;
+  color: #0f0;
+}
+
+/* === SLIDER THEME (green + square) === */
+#ui-panel input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
-  height: 6px;
-  background: #0a0; /* green track */
-  border-radius: 0; /* square track */
-  outline: none;
+  height: 10px;
+  background: #020;
+  border: 1px solid #0f0;
 }
 
-input[type="range"]::-webkit-slider-thumb {
+/* track */
+#ui-panel input[type="range"]::-webkit-slider-runnable-track {
+  height: 10px;
+  background: #020;
+}
+
+/* thumb */
+#ui-panel input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  background: #0f0; /* brighter green */
-  border: 1px solid #070;
-  cursor: pointer;
-  border-radius: 0; /* square thumb */
-}
-
-input[type="range"]::-moz-range-thumb {
   width: 14px;
   height: 14px;
   background: #0f0;
-  border: 1px solid #070;
+  border: 1px solid #0f0;
   cursor: pointer;
-  border-radius: 0;
+}
+
+/* Firefox */
+#ui-panel input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #0f0;
+  border: 1px solid #0f0;
+  cursor: pointer;
+}
+
+#ui-panel input[type="range"]::-moz-range-track {
+  background: #020;
+  height: 10px;
+  border: 1px solid #0f0;
 }
