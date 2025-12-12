@@ -148,13 +148,6 @@ async function animateGrowth() {
   }
 }
 
-function drawLossPlotX() {
-  plotCanvas.background(255, 0, 0);  // bright red
-  plotCanvas.fill(0, 255, 0);        // bright green
-  plotCanvas.noStroke();
-  plotCanvas.rect(10, 10, 50, 50);
-  image(plotCanvas, 0, 0);           // draw over main canvas for test
-}
 
 function drawLossPlot() {
   const PLOT_W = plotCanvas.width;
@@ -163,30 +156,37 @@ function drawLossPlot() {
   plotCanvas.background(0);
 
   // border
-  plotCanvas.push();
+  // plotCanvas.push();
   plotCanvas.stroke(0, 255, 0);
   plotCanvas.noFill();
-  plotCanvas.rect(0, 0, PLOT_W - 1, PLOT_H - 1);
-  plotCanvas.pop();
+  plotCanvas.strokeWeight(2)
+  plotCanvas.rect(0, 0, PLOT_W, PLOT_H);
+  plotCanvas.strokeWeight(1)
+  // plotCanvas.pop();
 
   if (lossHistory.length > 1) {
     plotCanvas.stroke(0, 255, 0);
     plotCanvas.noFill();
 
     plotCanvas.beginShape();
+    const maxLoss = Math.max(...lossHistory);
+    const scale = maxLoss > 0 ? plotCanvas.height / maxLoss : 1;
     for (let i = 0; i < lossHistory.length; i++) {
-      let x = map(i, 0, lossHistory.length - 1, 0, PLOT_W - 1);
-      let y = map(lossHistory[i], 0, 0.3, PLOT_H - 1, 0);
+      const val = lossHistory[i];
+      const y = plotCanvas.height - val * scale;
+      const x = i * (plotCanvas.width / MAX_HISTORY);
       plotCanvas.vertex(x, y);
     }
     plotCanvas.endShape();
   }
 
   // update displayed value in DOM
-  const v = lossHistory[lossHistory.length - 1];
+  const last = lossHistory[lossHistory.length - 1];
+  if (last === undefined) return;
+  const v = last < 1e-4 ? last.toExponential(2) : last.toFixed(4);
   const lossDiv = document.getElementById("loss-value");
   if (lossDiv && v !== undefined) {
-    lossDiv.textContent = "loss: " + v.toFixed(4);
+    lossDiv.textContent = "Loss: " + v;
   }
 
   // push plotCanvas to DOM <img>
