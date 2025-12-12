@@ -1,4 +1,8 @@
 /* === GLOBAL TERMINAL LOOK === */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   background: #000;
   color: #0f0;
@@ -9,8 +13,7 @@ body {
 body::after {
   content: "";
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  inset: 0;
   pointer-events: none;
   background: repeating-linear-gradient(
     to bottom,
@@ -18,106 +21,13 @@ body::after {
     rgba(0, 255, 0, 0.05) 1px,
     rgba(0, 0, 0, 0.05) 2px
   );
-  z-index: 99999;
   opacity: 0.25;
+  z-index: 99999;
 }
 
-/* === UI PANEL === */
-#ui-panel {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 240px;
-
-  background: #000;
-  border: 1px solid #0f0;
-  padding: 12px;
-  z-index: 20;
-
-  box-shadow: 0 0 10px #0f04;
-}
-
-/* Title inside panel */
-#ui-panel h3 {
-  margin-top: 0;
-  color: #0f0;
-  font-size: 16px;
-  margin-bottom: 12px;
-  border-bottom: 1px solid #0f0;
-  padding-bottom: 6px;
-}
-
-/* === BUTTONS === */
-#ui-panel button {
-  width: 100%;
-  background: #000;
-  color: #0f0;
-  border: 1px solid #0f0;
-  font-family: inherit;
-  padding: 6px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  letter-spacing: 1px;
-}
-
-#ui-panel button:hover {
-  background: #030;
-}
-
-/* === SLIDER blocks === */
-.ui-slider-block {
-  margin-bottom: 12px;
-}
-
-.ui-slider-block label {
-  display: block;
-  margin-bottom: 6px;
-  color: #0f0;
-}
-
-/* === SLIDER THEME (green + square) === */
-#ui-panel input[type="range"] {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 10px;
-  background: #020;
-  border: 1px solid #0f0;
-}
-
-/* track */
-#ui-panel input[type="range"]::-webkit-slider-runnable-track {
-  height: 10px;
-  background: #020;
-}
-
-/* thumb */
-#ui-panel input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
-  background: #0f0;
-  border: 1px solid #0f0;
-  cursor: pointer;
-}
-
-/* Firefox */
-#ui-panel input[type="range"]::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  background: #0f0;
-  border: 1px solid #0f0;
-  cursor: pointer;
-}
-
-#ui-panel input[type="range"]::-moz-range-track {
-  background: #020;
-  height: 10px;
-  border: 1px solid #0f0;
-}
-
+/* === LAYOUT === */
 #app-container {
   display: flex;
-  flex-direction: row;
   gap: 20px;
   padding: 20px;
 }
@@ -128,19 +38,6 @@ body::after {
   gap: 20px;
 }
 
-#canvas-wrapper {
-  border: 1px solid #0f0;
-  padding: 4px;
-  display: inline-block;
-}
-
-#plot-wrapper {
-  width: 100%;
-  height: auto;
-  border: 1px solid #0f0;
-  padding: 4px;
-}
-
 #right-column {
   width: 260px;
   display: flex;
@@ -148,25 +45,104 @@ body::after {
   gap: 20px;
 }
 
-/* extra blocks */
+/* === PANEL BLOCKS === */
 .panel-block {
   background: #000;
   color: #0f0;
   border: 1px solid #0f0;
   padding: 12px;
+  box-shadow: 0 0 10px #0f04;
 }
 
-.panel-block h3 {
-  margin-top: 0;
+.panel-block h3,
+#ui-panel h3 {
+  margin: 0 0 12px;
+  padding-bottom: 6px;
   border-bottom: 1px solid #0f0;
-  padding-bottom: 4px;
   font-size: 15px;
+}
+
+/* === BUTTONS === */
+button {
+  width: 100%;
+  background: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
+  padding: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+
+button:hover {
+  background: #030;
+}
+
+/* === SLIDER BLOCKS === */
+.ui-slider-block {
+  margin-bottom: 12px;
+}
+
+.ui-slider-block label {
+  margin-bottom: 6px;
+  display: block;
+  color: #0f0;
+}
+
+/* === SLIDER THEME === */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  background: #020;
+  border: 1px solid #0f0;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 10px;
+  background: #020;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #0f0;
+  border: 1px solid #0f0;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #0f0;
+  border: 1px solid #0f0;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 10px;
+  background: #020;
+  border: 1px solid #0f0;
+}
+
+/* === CANVAS + PLOT === */
+#canvas-wrapper,
+#plot-wrapper {
+  border: 1px solid #0f0;
+  padding: 4px;
+}
+
+#plot-wrapper {
+  width: 100%;
 }
 
 #plot-img {
   width: 100%;
   image-rendering: pixelated;
 }
+
 #loss-value {
   margin-bottom: 6px;
   font-size: 13px;
