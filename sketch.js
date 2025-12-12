@@ -7,19 +7,25 @@ let plotCanvas;
 let lossHistory = [];
 const MAX_HISTORY = 100;
 
-function setup() {
-  const MAIN_W = 64 * displayScale;
-  const MAIN_H = 64 * displayScale;
-  const PLOT_W = MAIN_W;
-  const PLOT_H = 100;
 
-  const cnv = createCanvas(MAIN_W, MAIN_H);
+function setup() {
+  const leftColumn = document.getElementById("left-column");
+
+  // Compute scale to fill height
+  displayScale = Math.floor(leftColumn.clientHeight / GRID_H);
+
+  const canvasWidth = GRID_W * displayScale;
+  const canvasHeight = GRID_H * displayScale;
+
+  const cnv = createCanvas(canvasWidth, canvasHeight);
   cnv.parent("canvas-wrapper");
 
-  plotCanvas = createGraphics(PLOT_W, PLOT_H);
+  // Plot canvas uses its wrapper size
+  const plotWrapper = document.getElementById("plot-wrapper");
+  plotCanvas = createGraphics(plotWrapper.clientWidth, plotWrapper.clientHeight || 100);
 
-  createUI();          // will now attach into #ui-panel
-  createPlaceholders(); // new helper (below)
+  createUI();
+  createPlaceholders();
 
   const off = document.createElement("canvas");
   off.width = GRID_W;
@@ -32,31 +38,41 @@ function setup() {
   resetRenderState();
 }
 
+// handle window resize dynamically
+window.addEventListener("resize", () => {
+  const leftColumn = document.getElementById("left-column");
+  displayScale = Math.floor(leftColumn.clientHeight / GRID_H);
+
+  resizeCanvas(GRID_W * displayScale, GRID_H * displayScale);
+
+  const plotWrapper = document.getElementById("plot-wrapper");
+  plotCanvas.resizeCanvas(plotWrapper.clientWidth, plotWrapper.clientHeight || 100);
+});
+
 
 
 function draw() {
-  // Update pixel buffer asynchronously only when needed
   if (displayDirty) {
     updateDisplayData();
-    drawLossPlot(0, 64*4+10);
+    drawLossPlot();
   }
 
-  // If we have a buffer → draw it
   if (latestDisplayData) {
     loadPixels();
     for (let y = 0; y < GRID_H; y++) {
       for (let x = 0; x < GRID_W; x++) {
         const i = (y * GRID_W + x) * 4;
         const r = latestDisplayData[i] * 255;
-        const g = latestDisplayData[i+1] * 255;
-        const b = latestDisplayData[i+2] * 255;
+        const g = latestDisplayData[i + 1] * 255;
+        const b = latestDisplayData[i + 2] * 255;
+
         for (let dy = 0; dy < displayScale; dy++) {
           for (let dx = 0; dx < displayScale; dx++) {
-            const px = ( (y*displayScale + dy) * width + (x*displayScale + dx) ) * 4;
+            const px = ((y * displayScale + dy) * width + (x * displayScale + dx)) * 4;
             pixels[px] = r;
-            pixels[px+1] = g;
-            pixels[px+2] = b;
-            pixels[px+3] = 255;
+            pixels[px + 1] = g;
+            pixels[px + 2] = b;
+            pixels[px + 3] = 255;
           }
         }
       }
@@ -155,14 +171,12 @@ function drawLossPlot() {
 
   plotCanvas.background(0);
 
-  // border
-  // plotCanvas.push();
+
   plotCanvas.stroke(0, 255, 0);
   plotCanvas.noFill();
   plotCanvas.strokeWeight(2)
   plotCanvas.rect(0, 0, PLOT_W, PLOT_H);
-  plotCanvas.strokeWeight(1)
-  // plotCanvas.pop();
+  // plotCanvas.strokeWeight(1)
 
   if (lossHistory.length > 1) {
     plotCanvas.stroke(0, 255, 0);

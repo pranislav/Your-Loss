@@ -1,3 +1,9 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 /* === GLOBAL TERMINAL LOOK === */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -26,16 +32,20 @@ body::after {
 }
 
 /* === LAYOUT === */
+
 #app-container {
   display: flex;
+  flex-direction: row;
   gap: 20px;
   padding: 20px;
+  height: 100%;
 }
 
 #left-column {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  height: 100%;
 }
 
 #right-column {

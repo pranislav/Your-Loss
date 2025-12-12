@@ -1,10 +1,6 @@
 function createUI() {
   const panel = document.getElementById("ui-panel");
 
-  const title = document.createElement("h3");
-  title.textContent = "Controls";
-  panel.appendChild(title);
-
   addButton(panel, "Toggle Growth (space)", () => triggerKey(" "));
   addButton(panel, "Grow Once (g)", () => triggerKey("g"));
   addButton(panel, "Reset Cells (r)", () => triggerKey("r"));
