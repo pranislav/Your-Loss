@@ -8,7 +8,12 @@ function createUI() {
   addButton(panel, "Reset Params (p)", () => triggerKey("p"));
   addButton(panel, "Fixed Steps (f)", () => triggerKey("f"));
 
-  addSlider(panel, {
+}
+
+function createPlaceholders() {
+  // LOSS PANEL placeholders
+  const loss = document.getElementById("loss-panel");
+  addSlider(loss, {
     label: "Edge Density",
     min: 0,
     max: 1,
@@ -16,12 +21,6 @@ function createUI() {
     value: EDGE_TARGET,
     onChange: (v) => EDGE_TARGET = parseFloat(v),
   });
-}
-
-function createPlaceholders() {
-  // LOSS PANEL placeholders
-  const loss = document.getElementById("loss-panel");
-  loss.append(document.createTextNode("TODO: loss weight sliders"));
 
   // SAVE/LOAD
   const sl = document.getElementById("save-load-panel");
