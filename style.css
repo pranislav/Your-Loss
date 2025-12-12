@@ -114,3 +114,61 @@ body::after {
   height: 10px;
   border: 1px solid #0f0;
 }
+
+#app-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px;
+}
+
+#left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#canvas-wrapper {
+  border: 1px solid #0f0;
+  padding: 4px;
+  display: inline-block;
+}
+
+#plot-wrapper {
+  width: 100%;
+  height: auto;
+  border: 1px solid #0f0;
+  padding: 4px;
+}
+
+#right-column {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* extra blocks */
+.panel-block {
+  background: #000;
+  color: #0f0;
+  border: 1px solid #0f0;
+  padding: 12px;
+}
+
+.panel-block h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #0f0;
+  padding-bottom: 4px;
+  font-size: 15px;
+}
+
+#plot-img {
+  width: 100%;
+  image-rendering: pixelated;
+}
+#loss-value {
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #0f0;
+}

@@ -8,25 +8,30 @@ let lossHistory = [];
 const MAX_HISTORY = 100;
 
 function setup() {
-  const MAIN_W = 64*displayScale
-  const MAIN_H = 64*displayScale
+  const MAIN_W = 64 * displayScale;
+  const MAIN_H = 64 * displayScale;
   const PLOT_W = MAIN_W;
   const PLOT_H = 100;
-  createCanvas(max(MAIN_W, PLOT_W), MAIN_H + PLOT_H + 20);
 
-  createUI();
+  const cnv = createCanvas(MAIN_W, MAIN_H);
+  cnv.parent("canvas-wrapper");
 
-  plotCanvas = createGraphics(PLOT_W, PLOT_H); 
+  plotCanvas = createGraphics(PLOT_W, PLOT_H);
 
-  // offscreen canvas for tf.toPixels()
-  const c = document.createElement('canvas');
-  c.width = GRID_W; c.height = GRID_H; c.id = 'offscreen64';
-  c.style.display = 'none';
-  document.body.appendChild(c);
+  createUI();          // will now attach into #ui-panel
+  createPlaceholders(); // new helper (below)
+
+  const off = document.createElement("canvas");
+  off.width = GRID_W;
+  off.height = GRID_H;
+  off.id = "offscreen64";
+  off.style.display = "none";
+  document.body.appendChild(off);
 
   initModel();
   resetRenderState();
 }
+
 
 
 function draw() {
@@ -151,34 +156,42 @@ function drawLossPlotX() {
   image(plotCanvas, 0, 0);           // draw over main canvas for test
 }
 
-function drawLossPlot(whereX, whereY) {
-  plotCanvas.strokeWeight(2);
+function drawLossPlot() {
+  const PLOT_W = plotCanvas.width;
+  const PLOT_H = plotCanvas.height;
+
   plotCanvas.background(0);
+
+  // border
+  plotCanvas.push();
   plotCanvas.stroke(0, 255, 0);
   plotCanvas.noFill();
+  plotCanvas.rect(0, 0, PLOT_W - 1, PLOT_H - 1);
+  plotCanvas.pop();
 
   if (lossHistory.length > 1) {
+    plotCanvas.stroke(0, 255, 0);
+    plotCanvas.noFill();
+
     plotCanvas.beginShape();
-    const maxLoss = Math.max(...lossHistory);
-    const scale = maxLoss > 0 ? plotCanvas.height / maxLoss : 1;
     for (let i = 0; i < lossHistory.length; i++) {
-      const val = lossHistory[i];
-      const y = plotCanvas.height - val * scale;
-      const x = i * (plotCanvas.width / MAX_HISTORY);
+      let x = map(i, 0, lossHistory.length - 1, 0, PLOT_W - 1);
+      let y = map(lossHistory[i], 0, 0.3, PLOT_H - 1, 0);
       plotCanvas.vertex(x, y);
     }
     plotCanvas.endShape();
   }
 
-  // Draw latest value
-  if (lossHistory.length > 0) {
-    const last = lossHistory[lossHistory.length - 1];
-    const lbl = last < 1e-4 ? last.toExponential(2) : last.toFixed(4);
-    plotCanvas.fill(255);
-    plotCanvas.noStroke();
-    plotCanvas.text(`Loss: ${lbl}`, 5, 12);
+  // update displayed value in DOM
+  const v = lossHistory[lossHistory.length - 1];
+  const lossDiv = document.getElementById("loss-value");
+  if (lossDiv && v !== undefined) {
+    lossDiv.textContent = "loss: " + v.toFixed(4);
   }
 
-  image(plotCanvas, whereX, whereY);
+  // push plotCanvas to DOM <img>
+  const img = document.getElementById("plot-img");
+  if (img) {
+    img.src = plotCanvas.elt.toDataURL();
+  }
 }
-

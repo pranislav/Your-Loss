@@ -15,6 +15,40 @@
   </head>
 
   <body>
+    <div id="app-container">
+    <div id="left-column">
+      <div id="canvas-wrapper">
+        <!-- p5 will inject the canvas here -->
+      </div>
+
+      <div id="plot-wrapper" class="panel-block">
+        <h3>Loss</h3>
+        <div id="loss-value">loss: 0.000</div>
+        <img id="plot-img" />
+      </div>
+
+    </div>
+
+    <div id="right-column">
+      <div id="ui-panel"></div>
+
+      <div class="panel-block" id="loss-panel">
+        <h3>Loss Config</h3>
+        <!-- sliders later -->
+      </div>
+
+      <div class="panel-block" id="save-load-panel">
+        <h3>Save / Load</h3>
+        <!-- buttons later -->
+      </div>
+
+      <div class="panel-block" id="presets-panel">
+        <h3>Presets</h3>
+        <!-- combo later -->
+      </div>
+    </div>
+  </div>
+
     <main></main>
   </body>
 </html>

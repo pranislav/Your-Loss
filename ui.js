@@ -1,13 +1,10 @@
 function createUI() {
-  const panel = document.createElement("div");
-  panel.id = "ui-panel";
-  document.body.appendChild(panel);
+  const panel = document.getElementById("ui-panel");
 
   const title = document.createElement("h3");
   title.textContent = "Controls";
   panel.appendChild(title);
 
-  // ORDER YOU REQUESTED:
   addButton(panel, "Toggle Growth (space)", () => triggerKey(" "));
   addButton(panel, "Grow Once (g)", () => triggerKey("g"));
   addButton(panel, "Reset Cells (r)", () => triggerKey("r"));
@@ -17,13 +14,28 @@ function createUI() {
 
   addSlider(panel, {
     label: "Edge Density",
-    min: 0.0,
-    max: 1.0,
+    min: 0,
+    max: 1,
     step: 0.01,
     value: EDGE_TARGET,
-    onChange: (v) => EDGE_TARGET = parseFloat(v)
+    onChange: (v) => EDGE_TARGET = parseFloat(v),
   });
 }
+
+function createPlaceholders() {
+  // LOSS PANEL placeholders
+  const loss = document.getElementById("loss-panel");
+  loss.append(document.createTextNode("TODO: loss weight sliders"));
+
+  // SAVE/LOAD
+  const sl = document.getElementById("save-load-panel");
+  sl.append(document.createTextNode("TODO: save/load buttons"));
+
+  // PRESETS
+  const pr = document.getElementById("presets-panel");
+  pr.append(document.createTextNode("TODO: preset selector"));
+}
+
 
 
 /* -------- Helpers -------- */
