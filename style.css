@@ -15,7 +15,6 @@ body {
   font-family: "IBM Plex Mono", "Courier New", monospace;
 }
 
-/* optional CRT scanline effect */
 body::after {
   content: "";
   position: fixed;
@@ -31,37 +30,81 @@ body::after {
   z-index: 99999;
 }
 
-/* === LAYOUT === */
+/* === MAIN LAYOUT === */
 
 #app-container {
   display: flex;
-  flex-direction: row;
+  height: 100vh;
+  overflow: hidden;          /* keep left side fixed */
   gap: 20px;
   padding: 20px;
-  height: 100%;
 }
 
 #left-column {
+  flex: 0 0 auto;            /* width depends only on canvas-wrapper */
   display: flex;
   flex-direction: column;
   gap: 20px;
   height: 100%;
+  /* border-right: 1px solid #0f0; */
+  padding-right: 20px;
 }
 
+#canvas-wrapper {
+  /* border: 1px solid #0f0; */
+  padding: 4px;
+}
+
+/* === RIGHT COLUMN: scroll + adaptive columns === */
+
 #right-column {
-  width: 260px;
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;           /* spacing between boxes */
+  height: 100%;
+  overflow-y: auto;
+  align-items: flex-start;   /* ← crucial: boxes keep their natural height */
+}
+/* === STICKY PLOT === */
+
+#plot-wrapper {
+  position: sticky; /* delete this and up to background: #000; for no sticky plot*/
+  top: 0;
+  z-index: 10;
+  background: #000;
+  /* border: 1px solid #0f0; */
+  padding: 4px;
+
+}
+
+#plot-img {
+  width: 100%;
+  /* image-rendering: pixelated; */
+}
+
+#loss-value {
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #0f0;
 }
 
 /* === PANEL BLOCKS === */
-.panel-block {
+
+/* .panel-block {
   background: #000;
   color: #0f0;
   border: 1px solid #0f0;
-  padding: 12px;
   box-shadow: 0 0 10px #0f04;
+  padding: 12px;
+
+  flex: 0 0 260px;       
+  margin-bottom: 20px;  
+} */
+
+.panel-block {
+  flex: 0 0 260px;     /* fixed width, don’t grow/shrink */
+  margin-bottom: 20px; /* vertical spacing for wrapped rows */
 }
 
 .panel-block h3,
@@ -84,23 +127,18 @@ button {
   letter-spacing: 1px;
   font-family: inherit;
 }
+button:hover { background: #030; }
 
-button:hover {
-  background: #030;
-}
-
-/* === SLIDER BLOCKS === */
+/* === SLIDERS === */
 .ui-slider-block {
   margin-bottom: 12px;
 }
-
 .ui-slider-block label {
   margin-bottom: 6px;
   display: block;
   color: #0f0;
 }
 
-/* === SLIDER THEME === */
 input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
@@ -108,12 +146,10 @@ input[type="range"] {
   background: #020;
   border: 1px solid #0f0;
 }
-
 input[type="range"]::-webkit-slider-runnable-track {
   height: 10px;
   background: #020;
 }
-
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 14px;
@@ -122,7 +158,6 @@ input[type="range"]::-webkit-slider-thumb {
   border: 1px solid #0f0;
   cursor: pointer;
 }
-
 input[type="range"]::-moz-range-thumb {
   width: 14px;
   height: 14px;
@@ -130,31 +165,8 @@ input[type="range"]::-moz-range-thumb {
   border: 1px solid #0f0;
   cursor: pointer;
 }
-
 input[type="range"]::-moz-range-track {
   height: 10px;
   background: #020;
   border: 1px solid #0f0;
-}
-
-/* === CANVAS + PLOT === */
-#canvas-wrapper,
-#plot-wrapper {
-  border: 1px solid #0f0;
-  padding: 4px;
-}
-
-#plot-wrapper {
-  width: 100%;
-}
-
-#plot-img {
-  width: 100%;
-  image-rendering: pixelated;
-}
-
-#loss-value {
-  margin-bottom: 6px;
-  font-size: 13px;
-  color: #0f0;
 }

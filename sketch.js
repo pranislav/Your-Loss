@@ -22,7 +22,7 @@ function setup() {
 
   // Plot canvas uses its wrapper size
   const plotWrapper = document.getElementById("plot-wrapper");
-  plotCanvas = createGraphics(plotWrapper.clientWidth, plotWrapper.clientHeight || 100);
+  plotCanvas = createGraphics(plotWrapper.clientWidth, plotWrapper.clientWidth/4 || 100);
 
   createUI();
   createPlaceholders();
