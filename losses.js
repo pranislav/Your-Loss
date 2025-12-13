@@ -3,6 +3,13 @@
 // All loss functions + feature extractors live here.
 
 window.EDGE_TARGET = 0.40;
+window.LAPLACIAN_TARGET = 0.0;
+window.CONTRAST_TARGET = 0.0001;
+window.BRIGHTNESS_TARGET = 0.3;
+window.NEIGHBOR_CORR_TARGET = 0.9; // tune ~1e-3 – 1e-1
+window.LOWPASS_SIGMA = 1.5;     // blur scale (frequency cutoff)
+window.LOWPASS_TARGET = 0.05;  // how much low-frequency content
+
 
 // -------------------------------------------
 // Utilities
@@ -38,19 +45,27 @@ function laplacianKernel() {
   );
 }
 
-// For FFT
-function fft2dScalar(img) {
-  // img: [B,H,W,1]
-  const c = tf.complex(img, tf.zerosLike(img));
-  const f = tf.spectral.fft2d(c);
-  return f;
+function gaussianKernel1D(sigma) {
+  const radius = Math.ceil(3 * sigma);
+  const size = radius * 2 + 1;
+  const vals = [];
+
+  let sum = 0;
+  for (let i = -radius; i <= radius; i++) {
+    const v = Math.exp(-(i * i) / (2 * sigma * sigma));
+    vals.push(v);
+    sum += v;
+  }
+
+  return tf.tensor1d(vals.map(v => v / sum), 'float32');
 }
+
 
 // -------------------------------------------
 // LOSSES
 // -------------------------------------------
 
-// 1) Edge density (real implementation)
+// 1) Edge density
 function loss_edge({ final }) {
   const edgeMean = edgeMeanFromVisible(final);
   const diff = edgeMean.sub(EDGE_TARGET);
@@ -60,54 +75,125 @@ function loss_edge({ final }) {
   return out;
 }
 
-// 2) Laplacian Smoothness Target (placeholder)
+// 2) Laplacian Smoothness
 function loss_laplacianSmooth({ final }) {
-  return zeroLikeScalar(final);
+  return tf.tidy(() => {
+    const V = final.slice(
+      [0, 0, 0, 0],
+      [final.shape[0], final.shape[1], final.shape[2], 1]
+    );
+
+    const lap = tf.conv2d(V, laplacianKernel(), 1, "same");
+    const energy = lap.square().mean().div(16.0);
+
+    const diff = energy.sub(LAPLACIAN_TARGET);
+    return diff.square();
+  });
 }
 
-// 3) Global Contrast (placeholder)
+// 3) Global Contrast
 function loss_globalContrast({ final }) {
-  return zeroLikeScalar(final);
+  return tf.tidy(() => {
+    const V = final.slice(
+      [0,0,0,0],
+      [final.shape[0], final.shape[1], final.shape[2], 1]
+    );
+
+    const mean = V.mean();
+    const mad = V.sub(mean).abs().mean();
+    return mad.sub(CONTRAST_TARGET).square();
+  });
 }
 
-// 4) Mean Brightness target (placeholder)
+// 4) Mean Brightness target
 function loss_meanBrightness({ final }) {
-  return zeroLikeScalar(final);
+  return tf.tidy(() => {
+    const V = final.slice(
+      [0, 0, 0, 0],
+      [final.shape[0], final.shape[1], final.shape[2], 1]
+    );
+
+    const mean = V.mean();
+    const diff = mean.sub(BRIGHTNESS_TARGET);
+    return diff.square();
+  });
 }
+
 
 // 5) Symmetry loss (param: vertical, 4-fold, radial) (placeholder)
 function loss_symmetry({ final, symmetryMode="vertical" }) {
   return zeroLikeScalar(final);
 }
 
-// 6) Neighbor Correlation Target (placeholder)
+// 6) Neighbor Correlation Target
 function loss_neighborCorr({ final }) {
-  return zeroLikeScalar(final);
+  return tf.tidy(() => {
+    const [B, H, W, C] = final.shape;
+
+    const V = final.slice([0, 0, 0, 0], [B, H, W, 1]);
+
+    // Horizontal neighbors
+    const V0x = V.slice([0, 0, 0, 0], [B, H, W - 1, 1]);
+    const V1x = V.slice([0, 0, 1, 0], [B, H, W - 1, 1]);
+
+    // Vertical neighbors
+    const V0y = V.slice([0, 0, 0, 0], [B, H - 1, W, 1]);
+    const V1y = V.slice([0, 1, 0, 0], [B, H - 1, W, 1]);
+
+    const dx = V0x.sub(V1x).square().mean();
+    const dy = V0y.sub(V1y).square().mean();
+
+    const corr = dx.add(dy);
+    const diff = corr.sub(NEIGHBOR_CORR_TARGET);
+
+    return diff.square();
+  });
 }
+
+
 
 // 7) Fractal Self-Similarity (placeholder)
 function loss_fractal({ final }) {
   return zeroLikeScalar(final);
 }
 
-// 8) FFT Frequency Preference (placeholder)
-function loss_fft({ final }) {
-  return zeroLikeScalar(final);
+// 8) Lowpass Frequency Preference
+function loss_lowpass({ final }) {
+  return tf.tidy(() => {
+    const [B, H, W, C] = final.shape;
+    const V = final.slice([0,0,0,0], [B,H,W,1]);
+
+    const k = gaussianKernel1D(LOWPASS_SIGMA);
+
+    // horizontal blur
+    const kx = k.reshape([1, k.size, 1, 1]);
+    const blurX = tf.conv2d(V, kx, 1, "same");
+
+    // vertical blur
+    const ky = k.reshape([k.size, 1, 1, 1]);
+    const blur = tf.conv2d(blurX, ky, 1, "same");
+
+    const energy = blur.square().mean();
+    const diff = energy.sub(LOWPASS_TARGET);
+
+    return diff.square();
+  });
 }
+
 
 // -------------------------------------------
 // Registry + weights
 // -------------------------------------------
 
 const LOSS_WEIGHTS = {
-  edge: 1.0,
+  edge: 0.0,
   laplacian: 0.0,
   contrast: 0.0,
   brightness: 0.0,
   symmetry: 0.0,
   neighborCorr: 0.0,
   fractal: 0.0,
-  fft: 0.0,
+  blur: 1.0,
 };
 
 const registry = {
@@ -118,7 +204,7 @@ const registry = {
   symmetry: loss_symmetry,
   neighborCorr: loss_neighborCorr,
   fractal: loss_fractal,
-  fft: loss_fft,
+  blur: loss_lowpass,
 };
 
 // -------------------------------------------
