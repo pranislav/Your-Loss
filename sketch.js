@@ -1,6 +1,5 @@
 // --- p5: small UI + render ---
 let training = false;
-let displayScale = 4; // 64→256
 let animating = false;
 let animStepsRemaining = 0;
 let plotCanvas;
@@ -17,8 +16,24 @@ function setup() {
   const canvasWidth = GRID_W * displayScale;
   const canvasHeight = GRID_H * displayScale;
 
+  cursor(
+    mouseX < canvasWidth && mouseY < canvasHeight ? 'pointer' : 'default'
+  );
+
   const cnv = createCanvas(canvasWidth, canvasHeight);
   cnv.parent("canvas-wrapper");
+
+  cnv.mousePressed(() => {
+    showHidden = !showHidden;
+    displayDirty = true;
+  });
+
+  // Prevent space from scrolling the page
+  window.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+      e.preventDefault();
+    }
+  });
 
   // Plot canvas uses its wrapper size
   const plotWrapper = document.getElementById("plot-wrapper");
@@ -78,6 +93,24 @@ function draw() {
       }
     }
     updatePixels();
+  }
+
+  if (
+    mouseX >= 0 && mouseX < width &&
+    mouseY >= 0 && mouseY < height
+  ) {
+    noStroke();
+    fill(0, 200);
+    rect(mouseX + 12, mouseY + 12, 120, 22);
+
+    fill(0, 255, 0);
+    textSize(12);
+    textAlign(LEFT, CENTER);
+    text(
+      showHidden ? "click to view visible" : "click to view hidden",
+      mouseX + 18,
+      mouseY + 26
+    );
   }
 }
 

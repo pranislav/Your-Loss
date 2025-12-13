@@ -5,6 +5,7 @@ const STATE_CH = 2;       // [V, H]
 const F = 8; // conv features  
 const H_DECAY = 0.99;     // hidden decay each step
 let k1, b1, k2, b2;
+let showHidden = false;
 
 
 let latestDisplayData = null; // Uint8Array RGBA 64*64*4
@@ -81,22 +82,38 @@ function resetRenderState() {
 
 
 async function updateDisplayData() {
-  const V = tf.tidy(() => {
-    return renderState.slice([0,0,0,0],[1, GRID_H, GRID_W, 1]);
+  const C = tf.tidy(() => {
+    const ch = showHidden ? 1 : 0; // 0 = visible, 1 = hidden
+    return renderState.slice(
+      [0, 0, 0, ch],
+      [1, GRID_H, GRID_W, 1]
+    );
   });
-  
+
   const rgba = tf.tidy(() => {
-    const v3 = V.concat([V, V], 3); // grayscale→RGB
-    const a = tf.onesLike(V);      // alpha
-    return v3.concat(a, 3);        // [1,H,W,4]
+    const v = showHidden
+      ? C.tanh().mul(0.5).add(0.5) // map hidden to [0,1]
+      : C;                         // visible already [0,1]
+
+    let rgb = v.concat([v, v], 3);
+    if (showHidden) {
+      const r = v;
+      const g = v;
+      const b = v.mul(0.6).add(0.4);   // push mid-grays toward blue
+
+      rgb = tf.concat([r, g, b], 3);
+    }
+    const a = tf.onesLike(v);
+    return rgb.concat(a, 3);
   });
 
-  latestDisplayData = await rgba.data(); // Uint8Array length H*W*4
+  latestDisplayData = await rgba.data();
 
-  V.dispose();
+  C.dispose();
   rgba.dispose();
   displayDirty = false;
 }
+
 
 function resetParams() {
   if (k1 && k2 && b1 && b2) {
