@@ -90,16 +90,10 @@ function createLossControls() {
     name: "lowpass",
     key: "blur",
     params: [{
-      label: "Sigma",
+      label: "Target",
       min: 1, max: 50, step: 1,
       value: LOWPASS_SIGMA,
       onChange: v => LOWPASS_SIGMA = parseFloat(v),
-    },
-    {
-      label: "Target",
-      min: 0, max: 1, step: 0.01,
-      value: LOWPASS_TARGET,
-      onChange: v => LOWPASS_TARGET = parseFloat(v),
     }]
   });
 }
