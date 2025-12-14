@@ -122,10 +122,26 @@ function loss_meanBrightness({ final }) {
 }
 
 
-// 5) Symmetry loss (param: vertical, 4-fold, radial) (placeholder)
-function loss_symmetry({ final, symmetryMode="vertical" }) {
-  return zeroLikeScalar(final);
+// 5) Symmetry loss (vertical) (not working)
+function loss_symmetry({ final, symmetryMode = "vertical" }) {
+  return tf.tidy(() => {
+    const [B, H, W, C] = final.shape;
+    const V = final.slice([0,0,0,0], [B,H,W,1]);
+
+    let Vflip;
+
+    if (symmetryMode === "vertical") {
+      Vflip = tf.reverse(V, [2]); // left-right
+    } else if (symmetryMode === "horizontal") {
+      Vflip = tf.reverse(V, [1]); // top-bottom
+    } else {
+      return tf.zeros([1]);
+    }
+
+    return V.sub(Vflip).square().mean();
+  });
 }
+
 
 // 6) Neighbor Correlation Target
 function loss_neighborCorr({ final }) {

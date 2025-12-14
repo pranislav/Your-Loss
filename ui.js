@@ -62,6 +62,19 @@ function createLossControls() {
     }]
   });
 
+  // symmetry loss is not working
+  // addLossBlock(panel, {
+  //   name: "symmetry",
+  //   label: "Symmetry",
+  //   weight: {
+  //     min: 0,
+  //     max: 1,
+  //     step: 0.01,
+  //     default: 0.0
+  //   },
+  // });
+
+
   addLossBlock(panel, {
     name: "Neighbor Correlation",
     key: "neighborCorr",
