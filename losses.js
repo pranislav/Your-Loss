@@ -10,6 +10,8 @@ window.NEIGHBOR_CORR_TARGET = 0.9; // tune ~1e-3 – 1e-1
 window.LOWPASS_SIGMA = 1.5;     // blur scale (frequency cutoff)
 window.LOWPASS_TARGET = 0.05;  // how much low-frequency content
 
+window.SOLO_LOSSES = new Set();
+
 
 // -------------------------------------------
 // Utilities
@@ -213,25 +215,24 @@ const registry = {
 
 function computeTotalLoss({ init, final, symmetryMode="vertical" }) {
   let total = null;
+  const useSolo = SOLO_LOSSES.size > 0;
 
   for (const name in registry) {
+
+    // SOLO LOGIC
+    if (useSolo && !SOLO_LOSSES.has(name)) continue;
+
     const w = LOSS_WEIGHTS[name];
     if (!w) continue;
 
     const fn = registry[name];
-
     const l = (name === "symmetry")
       ? fn({ init, final, symmetryMode })
       : fn({ init, final });
 
     const weighted = l.mul(w);
-
-    if (total === null) total = weighted;
-    else total = total.add(weighted);
+    total = total ? total.add(weighted) : weighted;
   }
 
-  if (total === null) total = tf.zeros([1]);
-  return total;
+  return total ?? tf.zeros([1]);
 }
-
-

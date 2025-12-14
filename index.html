@@ -1,57 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
-    <script src="ui.js"></script>
-    <script src="model.js"></script>
-    <script src="losses.js"></script>
-    <script src="train.js"></script>
-    <script src="sketch.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/addons/p5.sound.min.js"></script>
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+      <script src="ui.js"></script>
+      <script src="model.js"></script>
+      <script src="losses.js"></script>
+      <script src="train.js"></script>
+      <script src="sketch.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/addons/p5.sound.min.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <meta charset="utf-8" />
-  </head>
+      <link rel="stylesheet" type="text/css" href="style.css">
+      <meta charset="utf-8" />
+    </head>
 
-  <body>
-    <div id="app-container">
-    <div id="left-column">
-      <div id="canvas-wrapper">
-        <!-- p5 will inject the canvas here -->
+    <body>
+      <div id="app-container">
+      <div id="left-column">
+        <div id="canvas-wrapper">
+          <!-- p5 will inject the canvas here -->
+        </div>
+
+      </div>
+
+      <div id="right-column">
+
+        <div id="right-left">
+          <div id="plot-wrapper" class="panel-block">
+            <div id="loss-value">loss: 0.000</div>
+            <img id="plot-img" />
+          </div>
+
+          <div class="panel-block" id="loss-panel">
+            <h3>Loss Config</h3>
+          </div>
+        </div>
+
+        <div id="right-right">
+          <div class="panel-block" id="ui-panel">
+            <h3>Controls</h3>
+          </div>
+
+          <div class="panel-block" id="save-load-panel">
+            <h3>Save / Load</h3>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
 
-    <div id="right-column">
-
-      <div id="plot-wrapper" class="panel-block">
-        <!-- <h3>Loss</h3> -->
-        <div id="loss-value">loss: 0.000</div>
-        <img id="plot-img" />
-      </div>
-
-      <div class="panel-block" id="ui-panel">
-        <h3>Controls</h3>
-      </div>
-
-      <div class="panel-block" id="loss-panel">
-        <h3>Loss Config</h3>
-        <!-- sliders later -->
-      </div>
-
-      <div class="panel-block" id="save-load-panel">
-        <h3>Save / Load</h3>
-        <!-- buttons later -->
-      </div>
-
-      <div class="panel-block" id="presets-panel">
-        <h3>Presets</h3>
-        <!-- combo later -->
-      </div>
-    </div>
-  </div>
-
-    <main></main>
-  </body>
-</html>
+      <main></main>
+    </body>
+  </html>

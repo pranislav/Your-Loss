@@ -40,7 +40,8 @@ function setup() {
   plotCanvas = createGraphics(plotWrapper.clientWidth, plotWrapper.clientWidth/4 || 100);
 
   createUI();
-  createPlaceholders();
+  createSaveLoad();
+  createLossControls();
 
   const off = document.createElement("canvas");
   off.width = GRID_W;
