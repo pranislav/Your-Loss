@@ -7,8 +7,7 @@ window.LAPLACIAN_TARGET = 0.0;
 window.CONTRAST_TARGET = 0.0001;
 window.BRIGHTNESS_TARGET = 0.3;
 window.NEIGHBOR_CORR_TARGET = 0.9; // tune ~1e-3 – 1e-1
-window.LOWPASS_SIGMA = 1.5;     // blur scale (frequency cutoff)
-window.LOWPASS_TARGET = 0.05;  // how much low-frequency content
+window.LOWPASS_SIGMA = 1.5;   // blur scale (frequency cutoff)
 
 window.SOLO_LOSSES = new Set();
 
@@ -191,13 +190,13 @@ function loss_lowpass({ final }) {
     const ky = k.reshape([k.size, 1, 1, 1]);
     const blur = tf.conv2d(blurX, ky, 1, "same");
 
-    const energy = blur.square().mean();
-    const diff = energy.sub(LOWPASS_TARGET);
+    // high-frequency residual
+    const high = V.sub(blur);
 
-    return diff.square();
+    // penalize high frequencies
+    return high.square().mean();
   });
 }
-
 
 // -------------------------------------------
 // Registry + weights
