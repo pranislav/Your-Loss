@@ -161,17 +161,30 @@ async function keyPressed(evt) {
     console.log('fixed number of steps: ', fixed_n_steps)
   }
   
-  if (k === 'e') {
-    console.log("Edge density check:");
-    tf.tidy(() => {
-      const val = edgeMeanFromVisible(renderState);
-      val.data().then(v => console.log("edge density =", v[0]));
-    });
-  }
+  // if (k === 'e') {
+  //   console.log("Edge density check:");
+  //   tf.tidy(() => {
+  //     const val = edgeMeanFromVisible(renderState);
+  //     val.data().then(v => console.log("edge density =", v[0]));
+  //   });
+  // }
 
   if (k === 'v') {
     fixed_n_steps = !fixed_n_steps;
   }
+
+  if (k === 's') {
+    saveWeights();
+  }
+
+  if (k === 'l') {
+    loadWeights();
+  }
+
+  if (k === 'e') {
+    exportImage();
+  }
+
 }
 
 async function loopTrain() {
@@ -242,4 +255,53 @@ function drawLossPlot() {
   if (img) {
     img.src = plotCanvas.elt.toDataURL();
   }
+}
+
+async function saveWeights() {
+  const name = prompt("Checkpoint name?");
+  if (!name) return;
+
+  const { data, specs } = await tf.io.encodeWeights({
+    k1, b1, k2, b2
+  });
+
+  const blob = new Blob(
+    [JSON.stringify({ specs, data: Array.from(new Uint8Array(data)) })],
+    { type: "application/json" }
+  );
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+}
+
+
+
+async function loadWeights() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".json";
+
+  input.onchange = async () => {
+    const text = await input.files[0].text();
+    const { specs, data } = JSON.parse(text);
+
+    const buffer = new Uint8Array(data).buffer;
+    const tensors = await tf.io.decodeWeights(buffer, specs);
+
+    k1.assign(tensors.k1);
+    b1.assign(tensors.b1);
+    k2.assign(tensors.k2);
+    b2.assign(tensors.b2);
+
+    displayDirty = true;
+  };
+
+  input.click();
+}
+
+function exportImage() {
+  // export only the cells canvas
+  saveCanvas('cells', 'png');
 }
