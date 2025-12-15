@@ -3,10 +3,10 @@
 // All loss functions + feature extractors live here.
 
 window.EDGE_TARGET = 0.40;
-window.LAPLACIAN_TARGET = 0.0;
-window.CONTRAST_TARGET = 0.0001;
+window.LAPLACIAN_TARGET = 0.1;
+window.CONTRAST_TARGET = 0.1;
 window.BRIGHTNESS_TARGET = 0.3;
-window.NEIGHBOR_CORR_TARGET = 0.9; // tune ~1e-3 – 1e-1
+window.NEIGHBOR_CORR_TARGET = 0.3; // tune ~1e-3 – 1e-1
 window.LOWPASS_SIGMA = 1.5;   // blur scale (frequency cutoff)
 
 window.SOLO_LOSSES = new Set();
@@ -203,14 +203,14 @@ function loss_lowpass({ final }) {
 // -------------------------------------------
 
 const LOSS_WEIGHTS = {
-  edge: 0.0,
+  edge: 1.0,
   laplacian: 0.0,
   contrast: 0.0,
   brightness: 0.0,
   symmetry: 0.0,
   neighborCorr: 0.0,
   fractal: 0.0,
-  blur: 1.0,
+  blur: 0.0,
 };
 
 const registry = {

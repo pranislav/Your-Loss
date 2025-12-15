@@ -67,7 +67,7 @@ function createLossControls() {
     key: "laplacian",
     params: [{
       label: "Target",
-      min: 0, max: 1, step: 0.01,
+      min: 0, max: 0.3, step: 0.001,
       value: LAPLACIAN_TARGET,
       onChange: v => LAPLACIAN_TARGET = parseFloat(v),
     }]
@@ -78,7 +78,7 @@ function createLossControls() {
     key: "contrast",
     params: [{
       label: "Target",
-      min: 0, max: 1, step: 0.0001,
+      min: 0, max: 0.3, step: 0.001,
       value: CONTRAST_TARGET,
       onChange: v => CONTRAST_TARGET = parseFloat(v),
     }]
@@ -113,7 +113,7 @@ function createLossControls() {
     key: "neighborCorr",
     params: [{
       label: "Target",
-      min: 0, max: 0.1, step: 0.001,
+      min: 0, max: 1, step: 0.01,
       value: NEIGHBOR_CORR_TARGET,
       onChange: v => NEIGHBOR_CORR_TARGET = parseFloat(v),
     }]
@@ -124,7 +124,7 @@ function createLossControls() {
     key: "blur",
     params: [{
       label: "Target",
-      min: 1, max: 50, step: 1,
+      min: 0.5, max: 5, step: 0.1,
       value: LOWPASS_SIGMA,
       onChange: v => LOWPASS_SIGMA = parseFloat(v),
     }]
