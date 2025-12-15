@@ -6,7 +6,7 @@ function createUI() {
   addButton(panel, "Reset Cells (r)", () => triggerKey("r"));
   addButton(panel, "Toggle Training (t)", () => triggerKey("t"));
   addButton(panel, "Reset Params (p)", () => triggerKey("p"));
-  addButton(panel, "Fixed Steps (f)", () => triggerKey("f"));
+  // addButton(panel, "Fixed Steps (f)", () => triggerKey("f"));
 
 }
 
