@@ -1,0 +1,1 @@
+In this neural cellular automaton playground, you can try to tweak the loss function in pursuit of striking patterns, but beware - these cells will try to game your loss. Maybe just let them amuse you with intricate shapes arisen from random weights initialization.
