@@ -1,6 +1,6 @@
 // --- NCA model (grayscale + hidden), F=8, T=10 ---
 // deep magic happens here
-const GRID_W = 64, GRID_H = 64;
+let GRID_W = 64, GRID_H = 64;
 const STATE_CH = 2;       // [V, H]
 const F = 8; // conv features  
 const H_DECAY = 0.99;     // hidden decay each step

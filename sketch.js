@@ -42,6 +42,7 @@ function setup() {
   createUI();
   createSaveLoad();
   createLossControls();
+  createCellsNumPanel();
 
   const off = document.createElement("canvas");
   off.width = GRID_W;

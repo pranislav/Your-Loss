@@ -10,6 +10,39 @@ function createUI() {
 
 }
 
+function createCellsNumPanel() {
+  const panel = document.getElementById("cells-num-panel");
+  
+  addSlider(panel, {
+    label: "Grid Size",
+    min: 16,
+    max: 128,
+    step: 1,
+    value: GRID_W,
+    onChange: v => {
+      GRID_W = GRID_H = parseInt(v);
+      resizeGridCanvas();
+    },
+  });
+}
+
+function resizeGridCanvas() {
+  // compute new scale to fill left column height
+  const leftColumn = document.getElementById("left-column");
+  displayScale = Math.floor(leftColumn.clientHeight / GRID_H);
+
+  const canvasWidth = GRID_W * displayScale;
+  const canvasHeight = GRID_H * displayScale;
+
+  // p5 canvas resize
+  resizeCanvas(canvasWidth, canvasHeight);
+
+  // recreate renderState to match new GRID_W/H
+  if (renderState) renderState.dispose();
+  resetRenderState();
+}
+
+
 function createLossControls() {
   const panel = document.getElementById("loss-panel");
   panel.innerHTML = "";
