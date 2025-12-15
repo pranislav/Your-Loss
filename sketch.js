@@ -52,6 +52,7 @@ function setup() {
 
   initModel();
   resetRenderState();
+  initLossHistory();
 }
 
 // handle window resize dynamically
@@ -256,6 +257,17 @@ function drawLossPlot() {
     img.src = plotCanvas.elt.toDataURL();
   }
 }
+
+// initialize first loss point
+function initLossHistory() {
+  const lossTensor = computeTotalLoss({ init: renderState, final: renderState });
+  lossTensor.data().then(val => {
+    lossHistory.push(val[0]);
+    drawLossPlot(); // draw initial plot
+  });
+  lossTensor.dispose();
+}
+
 
 async function saveWeights() {
   const name = prompt("Checkpoint name?");
