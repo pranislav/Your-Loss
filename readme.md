@@ -57,7 +57,8 @@ L = Σᵢ wᵢ · Lᵢ
 
 
 Each loss encodes a *statistical property* of the final image.
-Targets (shown as Greek parameters in the UI) define what the automaton is encouraged to produce.
+The UI contains Weight slider (setting wᵢ) and Target slider (setting an internal parameter of particular partial loss, eg. for brightness low value pushes the net to produce darker image).
+For better understanding of what the target values do, take a look at the loss formulas in the Your_Loss_Poster.pdf file.
 
 ---
 
@@ -70,6 +71,7 @@ Targets (shown as Greek parameters in the UI) define what the automaton is encou
 - **Low-pass energy** — favors low spatial frequencies via Gaussian blur  
 
 Losses can be combined and adjusted interactively.
+For the exact loss formulas see Loss Functions part in the Your_Loss_Poster.pdf file.
 
 ---
 
