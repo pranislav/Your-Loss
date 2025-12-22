@@ -1,6 +1,7 @@
 # Your Loss
 
 **Your Loss** is an interactive **Neural Cellular Automaton (NCA)** where visual patterns are *grown*, not learned from data.
+Check out nice_piccs folder to see what it can do, but beware, lot of the puuctures are mere products of luckily initialized nets.
 
 Instead of training on images, the system optimizes **loss functions describing desired properties** of the final state — smoothness, contrast, brightness, correlation, frequency content — and discovers how to generate such patterns on its own.
 
