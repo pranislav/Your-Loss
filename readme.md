@@ -23,6 +23,10 @@ Built with **TensorFlow.js** + **p5.js**.
 
 ---
 
+## Where to Play with It
+
+You can run it on [github pages](https://pranislav.github.io/Your-Loss/) or clone the repo and run it locally.
+
 ## Controll & Bit Behind the Scene
 
 To start/stop pattern growth, click *Toggle Growth* or press space. You can also gorw just the next generation by *Grow Once* or pressing **G**. The target number of generation is 10, but interesting patterns often emerge way beyond this threshold. The growth will be governed by current state of the convolutional net. It is initialized randomly, but that can often lead to interesting patterns too. If you want to quickly explore the behavior space, you can time-to-time click *Reset Params* or press **R**, each time it will yield different patterns thanks to random initialization. You can reset state of the cells too, by clicking *Reset Cells* or pressing **R**.
