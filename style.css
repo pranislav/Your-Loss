@@ -53,22 +53,6 @@ body::after {
 #canvas-wrapper {
   /* border: 1px solid #0f0; */
   padding: 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-#canvas-wrapper canvas {
-  display: block;
-  flex: 0 0 auto;
-}
-
-#canvas-hint {
-  color: #0f0;
-  font-size: 12px;
-  line-height: 1.4;
-  white-space: nowrap;
 }
 
 /* === RIGHT COLUMN: scroll + adaptive columns === */

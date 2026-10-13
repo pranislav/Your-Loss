@@ -16,14 +16,15 @@ function setup() {
   const canvasWidth = GRID_W * displayScale;
   const canvasHeight = GRID_H * displayScale;
 
+  cursor(
+    mouseX < canvasWidth && mouseY < canvasHeight ? 'pointer' : 'default'
+  );
+
   const cnv = createCanvas(canvasWidth, canvasHeight);
   cnv.parent("canvas-wrapper");
-  cnv.elt.style.cursor = "pointer";
 
   cnv.mousePressed(() => {
     showHidden = !showHidden;
-    document.getElementById("canvas-hint").textContent =
-      showHidden ? "click to view visible" : "click to view hidden";
     displayDirty = true;
   });
 
@@ -97,6 +98,23 @@ function draw() {
     updatePixels();
   }
 
+  if (
+    mouseX >= 0 && mouseX < width &&
+    mouseY >= 0 && mouseY < height
+  ) {
+    noStroke();
+    fill(0, 200);
+    rect(mouseX + 12, mouseY + 12, 120, 22);
+
+    fill(0, 255, 0);
+    textSize(12);
+    textAlign(LEFT, CENTER);
+    text(
+      showHidden ? "click to view visible" : "click to view hidden",
+      mouseX + 18,
+      mouseY + 26
+    );
+  }
 }
 
 
