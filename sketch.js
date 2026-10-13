@@ -10,6 +10,10 @@ const MAX_HISTORY = 100;
 function setup() {
   const leftColumn = document.getElementById("left-column");
 
+  // Pixel writes below use one RGBA entry per canvas pixel. Keep p5's backing
+  // store at the same density as its logical canvas dimensions.
+  pixelDensity(1);
+
   // Compute scale to fill height
   displayScale = Math.floor(leftColumn.clientHeight / GRID_H);
 
